@@ -23,6 +23,28 @@ register(
 )
 
 register(
+    id='Gomoku19x19random-v0',
+    entry_point='gym_gomoku.envs:GomokuEnv',
+    kwargs={
+        'player_color': 'black',
+        'opponent': 'random', # random policy is the simplest
+        'board_size': 19,
+    },
+    nondeterministic=True,
+)
+
+register(
+    id='Gomoku9x9random-v0',
+    entry_point='gym_gomoku.envs:GomokuEnv',
+    kwargs={
+        'player_color': 'black',
+        'opponent': 'random', # random policy is the simplest
+        'board_size': 9,
+    },
+    nondeterministic=True,
+)
+
+register(
     id='Gomoku19x19duel-v0',
     entry_point='gym_gomoku.envs:GomokuEnv',
     kwargs={

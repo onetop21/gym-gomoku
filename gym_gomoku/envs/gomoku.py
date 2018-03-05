@@ -125,12 +125,12 @@ class GomokuEnv(gym.Env):
         
         # Let the opponent play if it's not the agent's turn, there is no resign in Gomoku
         if self.state.color != self.player_color:
-            if self.opponent != 'userdefine':
+            if self.opponent == 'userdefine':
+                self.player_color = 'white' if self.player_color == 'black' else 'black'
+            else:
                 self.state, _ = self._exec_opponent_play(self.state, None, None)
                 opponent_action_coord = self.state.board.last_coord
                 self.moves.append(opponent_action_coord)
-            else:
-                self.player_color = 'white' if self.player_color == 'black' else 'black'
      
         # We should be back to the agent color
         assert self.state.color == self.player_color
@@ -177,15 +177,15 @@ class GomokuEnv(gym.Env):
         self.action_space.remove(action) # remove current action from action_space
         
         # Opponent play
-        if self.opponent != 'userdefine':
+        if self.opponent == 'userdefine':
+            self.player_color = 'white' if self.player_color == 'black' else 'black'
+        else:   # beginner
             if not self.state.board.is_terminal():
                 self.state, opponent_action = self._exec_opponent_play(self.state, prev_state, action)
                 self.moves.append(self.state.board.last_coord)
                 self.action_space.remove(opponent_action)   # remove opponent action from action_space
                 # After opponent play, we should be back to the original color
                 assert self.state.color == self.player_color
-        else:
-            self.player_color = 'white' if self.player_color == 'black' else 'black'
 
         # Reward: if nonterminal, there is no 5 in a row, then the reward is 0
         if not self.state.board.is_terminal():
@@ -202,11 +202,11 @@ class GomokuEnv(gym.Env):
         if win_color == "empty": # draw
             reward = 0.
         else:
-            if self.opponent != 'userdefine':
+            if self.opponent == 'userdefine':
+                reward = 1. if win_color == 'black' else -1.
+            else:
                 player_wins = (self.player_color == win_color) # check if player_color is the win_color
                 reward = 1. if player_wins else -1.
-            else:
-                reward = 1. if win_color == 'black' else -1.
 
         return self.state.board.encode(), reward, True, {'state': self.state}
     

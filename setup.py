@@ -5,7 +5,7 @@ from setuptools import setup
 from setuptools import find_packages
 
 setup(
-    name='gym_gomoku',
+    name='gym_gomoku_duel',
     version='0.0.1',
     description = 'Game Gomoku or Five-In-a-Row Gym Environment',
     author = 'Xichen Ding',
